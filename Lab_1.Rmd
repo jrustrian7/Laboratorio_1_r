@@ -1,0 +1,79 @@
+---
+title: "Laboratorio #1"
+output: html_notebook
+---
+
+#paso 1, vectores y matrices
+
+```{r}
+student_1 <- c(50.4, 62.3, 92.1, 77.6, TRUE)
+student_2 <- c(41.7, 87.9, 75.3, 72.4, FALSE)
+student_3 <- c(30.3, 67.8, 69.3, 71.2, FALSE)
+student_4 <- c(65.4, 85.1, 92.3, 96.8, TRUE)
+student_5 <- c(70.4, 88.2, 95.2, 90.7, TRUE)
+
+students_vector <- c(student_1, student_2, student_3, student_4, student_5)
+
+students_matrix <- matrix(students_vector, nrow = 5, byrow = TRUE)
+students_matrix #verificando que se haya creado correctamente la matriz
+```
+
+#paso 2, nombrando a la matriz
+
+```{r}
+name_students <- c("Lily Brown", "Davis Moore", "Susan Taylor", "Mike Jones", "Tom Hill")
+name_courses_legal_age <- c("TIC", "Accounting", "Psychology", "Ethics", "Legal_age")
+
+rownames(students_matrix) <- name_students #asignando nombre a las filas
+colnames(students_matrix) <- name_courses_legal_age #asignando nombre a las columnas
+students_matrix #verificando que se haya asignado correctamente los valores a filas y columnas
+```
+#paso 3, haciendo subtotales
+
+```{r}
+total_grade_student <- rowSums(students_matrix[,1:4])
+total_grade_student
+
+result_students <- cbind(students_matrix, total_grade_student) #agregando un vector mas a la matriz
+result_students #verificando que se ejecute bien los subtotales
+```
+
+#paso 4, seleccionando elementos de la matriz
+
+```{r}
+selected_elements <- result_students[c(1,3,5),c(2,4)] #filtrando los datos por fila y columna
+selected_elements #verificando que se ejecute el resultado del filtro de datos
+```
+
+#paso 5, creando el data fram
+
+```{r}
+students_grades_df <- data.frame(result_students)
+subset(students_grades_df, Accounting > 80 & Legal_age == TRUE) #aplicando filtros a data frame
+students_grades_df ##verificando que se ejecute el resultado del filtro de datos
+```
+
+#paso 6, funciones, condicionales y bucles
+
+```{r}
+students_projection <- function(data){ #la funcion students_projection recibira como parametro un conjunto de datos "data" los cuales seran recorridos por fila y columna para indicar el status del estudiantes, si fue aprovado, si esta en riesgo de reprobar o si tiene oportunidad de aprovar
+  
+  for (fila in 1 : nrow(data)) { #recorriendo todas las filas de la matriz
+    for (columna in 1:4){ #recorriendo de la columna 1 a la 4 para cada fila
+      
+      print(paste("Ponderación para la casilla [" , fila,"],[", columna, "] es:", data[fila,columna]))
+      
+      if (data[fila,columna] <= 45) {
+        print("Student at risk")
+      }else if (data[fila,columna] > 45 & data[fila,columna] < 61) {
+        print("Student maybe approved")
+      }else if (data[fila,columna] >= 61) {
+        print("Student approved") 
+      }
+    }
+  }
+}
+
+students_projection(result_students) #llamando a la función para hacer pruebas
+```
+
